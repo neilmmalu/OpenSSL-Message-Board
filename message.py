@@ -17,6 +17,9 @@ def get_messages(group):
 		print 'Exception when GETing message'
 	return []
 
+def message_to_string(message):
+	return "\n%s - %s\n%s\n" % (message['user'], message['time'], message['message'])
+
 def post_message(user_name, group, message_text):
 	try:
 		message = create_message_wrapper(user_name, group, message_text)
@@ -33,9 +36,11 @@ def post_message(user_name, group, message_text):
 
 
 if __name__ == '__main__':
-	user_name = 'Joe'
-	group = 'Penn State'
-	message = 'I hate everything :('
-	print post_message(user_name, group, message)
-	# print get_messages('Rutgers')
+	# user_name = 'Joe'
+	# group = 'Penn State'
+	# message = 'I hate everything :('
+	# print post_message(user_name, group, message)
+	messages = get_messages('Rutgers')
+	for message in messages:
+		print message_to_string(message)
 
