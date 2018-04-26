@@ -16,7 +16,7 @@ def main():
 
 def login(conn):
 	conn.send('SYN'.encode())
-	response = conn.recv(2048).decode()
+	response = conn.recv(1024).decode()
 
 	username = raw_input("Enter username: ")
 	password = raw_input("Enter password: ")
@@ -34,6 +34,8 @@ def login(conn):
 		return
 
 	login(conn)
+
+
 
 if __name__ == '__main__':
 	main()
