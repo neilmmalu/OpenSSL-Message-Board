@@ -104,8 +104,13 @@ def queries(conn, username):
 			# get messages from the JSON file and add them to a buffer
 			messages = get_messages(group)
 			buff = ""
-			for i in range(len(messages)):
-				buff += message_to_string(messages[i])
+
+			if len(messages) == 0:
+				buff = "Message board does not exist. Please try again!\n"
+
+			else:
+				for i in range(len(messages)):
+					buff += message_to_string(messages[i])
 			conn.send(buff.encode())
 
 		elif info == 'POST':
