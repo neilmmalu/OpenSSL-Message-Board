@@ -1,3 +1,12 @@
+Group:
+	Neil Malu
+	Kiran Kurian
+	Dhruv Bhardwaj
+	Tomer Levy
+
+Assignment 6 - OpenSSL Message Board
+
+
 Instructions:
 
 1)	Run server.py and client.py on different terminals. Make sure that the server is running first.
