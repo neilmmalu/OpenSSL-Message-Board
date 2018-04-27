@@ -11,20 +11,20 @@ def main():
 	s.bind((HOST, PORT))
 	s.listen(10)
 
+	ssl_s = ssl.wrap_socket(s, certfile = 'domain.crt', keyfile = 'domain.key', server_side = True)
 	while True:
-		client_socket, client_address = s.accept()
+		client_socket, client_address = ssl_s.accept()
 		print "Received connection from ", client_address
 
 		try:
-			conn = ssl.wrap_socket(s, certfile = 'domain.crt', keyfile = 'domain.key', server_side = True)
 			print "Server running"
-			thread.start_new_thread(handle, (conn,))
+			thread.start_new_thread(handle, (client_socket,))
 		except ssl.SSLError as e:
 			print(e)
 
 
 def handle(conn):
-    conn.send('ACK'.encode())
+    conn.send('ACK')
     response = conn.recv(1024).decode()
     print(response)
     #Confirmed connection and Synced
