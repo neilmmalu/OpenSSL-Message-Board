@@ -56,11 +56,12 @@ def verify(username, password):
 			user = line.strip('\n')
 			if user == username:
 				hashed = file.readline().strip('\n')
-				if(sha256_crypt.verify(password, hashed)):
+				if(sha256(password).hexdigest() == hashed):
 					print "Success" + username
 					return 1
 				else:
 					print "Wrong password. Please try again"
+					return 0
 			else:
 				line = file.readline()
 				i += 1
@@ -68,7 +69,7 @@ def verify(username, password):
 	file.close()
 	file = open('passwords.txt', 'w')
 	new_hash = sha256(password).hexdigest()
-	file.write('\nusername\nnew_hash')
+	file.write(username+'\n'+new_hash+'\n')
 	file.close()
 	print "New user added"
 	return 1
