@@ -2,6 +2,7 @@ import socket
 import thread
 import ssl
 from hashlib import sha256
+from message import *
 
 HOST = 'localhost'
 PORT = 8080
@@ -35,13 +36,11 @@ def handle(conn):
     if success == 1:
     	conn.send('SUCCESS')
     	# Do stuff with queries here
+    	info = queries(conn, username)
     else:
     	conn.send('FAILURE')
 
-    if data == 'QUIT':
-    	return
-    else:
-    	handle(conn)
+    handle(conn)
 
 
 def verify(username, password):
@@ -74,6 +73,35 @@ def verify(username, password):
 	print "New user added"
 	return 1
 
+def queries(conn, username):
+	conn.send("ACK queries".encode())
+	info = conn.recv(1024).decode()
+
+	while info != 'END':
+		info = conn.recv(1024).decode()
+		if info == 'END':
+			print "Logging out"
+			conn.send('END'.encode())
+		
+		elif info == 'GET':
+			conn.send('GET'.encode())
+			group = conn.recv(1024).decode()
+			messages = get_messages(group)
+			buff = ""
+			for i in range(len(messages)):
+				buff += message_to_string(messages[i])
+			conn.send(buff.encode())
+
+		elif info == 'POST':
+			conn.send('POST'.encode())
+			group = conn.recv(1024).decode()
+			message = conn.recv(4096).decode()
+			post_message(username, group, message)
+
+		else:
+			conn.send('ACK'.encode())
+
+	conn.send('END')
 
 
 if __name__ == '__main__':

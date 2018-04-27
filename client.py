@@ -24,18 +24,38 @@ def login(conn):
 	conn.send(password.encode())
 
 	result = conn.recv(1024).decode()
-	if result == 1:
+	if result == 'SUCCESS':
 		#Success
-		info = 'GET/POST/END'
+		info = queries(conn)
 	else:
 		print "Invalid Login"
-	if info == 'END':
-		conn.close()
-		return
 
 	login(conn)
 
+def queries(conn):
+	info = conn.recv(1024).decode()
+	conn.send('SYN'.encode())
 
+	while info != 'END':
+		query = raw_input("Enter a GET, POST or END query:\n")
+		conn.send(query)
+		info = conn.recv(1024).decode()
+		if query == 'END':
+			return 'END'
+		elif query == 'POST':
+			group = raw_input("Name of message board. A new board will be created if it does not exist: ")
+			message = raw_input("Enter your message: ")
+			conn.send(group.encode())
+			conn.send(message.encode())
+		elif query == 'GET':
+			group = raw_input("What message board would you like to view?: ")
+			conn.send(group.encode())
+			buff = conn.recv(65536).decode()
+			print buff
+		else:
+			print "Invalid query. Try again\n"
+
+	return 'END'
 
 if __name__ == '__main__':
 	main()
