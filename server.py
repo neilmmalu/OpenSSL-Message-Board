@@ -56,10 +56,10 @@ def verify(username, password):
 			if user == username:
 				hashed = file.readline().strip('\n')
 				if(sha256(password).hexdigest() == hashed):
-					print "Success" + username
+					# print "Success. Welcome " + username + '\n'
 					return 1
 				else:
-					print "Wrong password. Please try again"
+					# print "Wrong password. Please try again\n"
 					return 0
 			else:
 				line = file.readline()
@@ -70,7 +70,7 @@ def verify(username, password):
 	new_hash = sha256(password).hexdigest()
 	file.write(username+'\n'+new_hash+'\n')
 	file.close()
-	print "New user added"
+	print "New user added\n"
 	return 1
 
 def queries(conn, username):
@@ -80,7 +80,7 @@ def queries(conn, username):
 	while info != 'END':
 		info = conn.recv(1024).decode()
 		if info == 'END':
-			print "Logging out"
+			print "Logging out\n"
 			conn.send('END'.encode())
 		
 		elif info == 'GET':
